@@ -1,5 +1,5 @@
 # WebsocketMultiplayerGame
-Agar.io Type Multiplayer Game
+Agar.io Type Multiplayer Game using JavaScript, node.js and websockets
 
 # Abstract:
 Agar.io Implementation: Development of a real-time multi-player gaming system that is highly scalable and optimized in a distributed architecture. In this development process, the key challenges that come into focus are those of real-time synchronization, network latency handling, load balancing, and fault tolerance. Agar.io is a game that demands smooth and continuous updates of player movements, collision detection, and leaderboard updating.
