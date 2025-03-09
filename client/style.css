@@ -1,0 +1,12 @@
+body {
+    margin: 0; /* Remove default body margins */
+    overflow: hidden; /* Prevent scrollbars */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make the body take up the full viewport height */
+    background-color: #f0f0f0;
+  }
+  #gameCanvas{
+      border: 1px solid black;
+  }
