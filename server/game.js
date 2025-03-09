@@ -25,14 +25,25 @@ class Player {
   }
 }
 
-function checkCollision(player1, player2) {
-    const dx = player1.x - player2.x;
-    const dy = player1.y - player2.y;
+class Food {
+    constructor(id, x, y, radius, color) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+    }
+}
+
+function checkCollision(entity1, entity2) { // Made more general (checks between players or players and food)
+    const dx = entity1.x - entity2.x;
+    const dy = entity1.y - entity2.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    return distance < player1.radius + player2.radius;
-  }
-  
+    return distance < entity1.radius + entity2.radius;
+}
+
 module.exports = {
     Player,
+    Food,
     checkCollision
 };

@@ -7,62 +7,73 @@ canvas.width = 800;  // Set canvas dimensions
 canvas.height = 600;
 
 let players = {}; // Store player data received from the server
+let food = []; // Array to store food
+
 
 let myPlayerId = null;
 
 socket.on('connect', () => {
-    console.log('Connected to server');
-    myPlayerId = socket.id;  // Get the client's player ID
+  console.log('Connected to server');
+  myPlayerId = socket.id;  // Get the client's player ID
 });
 
 socket.on('init', (data) => {
-    players = data.players;
+  players = data.players;
 });
 
 socket.on('newPlayer', (player) => {
-    players[player.id] = player;
+  players[player.id] = player;
 });
 
 socket.on('playerDisconnected', (playerId) => {
-    delete players[playerId];
+  delete players[playerId];
 });
 
 socket.on('gameStateUpdate', (data) => {
-    //If the data is not me update it.
-    for(let id in data){
-      if(myPlayerId != id){
-        players[id] = data[id];
-      }
+  // Update other players
+  for (let id in data.players) {
+    if (id !== myPlayerId) {
+      players[id] = data.players[id];
+    } 
+    else {
+      players[id].radius = data.players[id].radius; // Update our player's radius with server value
     }
-  
-    // Client-side prediction: Update *our* player's position locally *before*
-    // receiving the server update.  This makes movement feel smoother.
-    const myPlayer = players[myPlayerId];
-    if (myPlayer) {
-        // Update our local copy of the player based on the *last known* input.
-        const dx = myPlayer.target.x - myPlayer.x;
-        const dy = myPlayer.target.y - myPlayer.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-  
-        if (distance > 1) {
-          const moveX = (dx / distance) * myPlayer.speed;
-          const moveY = (dy / distance) * myPlayer.speed;
-          myPlayer.x += moveX;
-          myPlayer.y += moveY;
-      }
-      //Update Players object
-      players[myPlayerId] = myPlayer;
+  }
+
+  // Update food
+  food = data.food;
+
+  // Client-side prediction: Update *our* player's position locally *before*
+  // receiving the server update.  This makes movement feel smoother.
+  const myPlayer = players[myPlayerId];
+  if (myPlayer) {
+    // Update our local copy of the player based on the *last known* input.
+    const dx = myPlayer.target.x - myPlayer.x;
+    const dy = myPlayer.target.y - myPlayer.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 1) {
+      const moveX = (dx / distance) * myPlayer.speed;
+      const moveY = (dy / distance) * myPlayer.speed;
+      myPlayer.x += moveX;
+      myPlayer.y += moveY;
     }
-    //Merge data
-    const serverPlayers = data[myPlayerId];
-      if(serverPlayers){
-      // Reconciliation: Smoothly adjust our predicted position towards the
-        // server's authoritative position.  This prevents large jumps.
-        const reconciliationRate = 0.1; // Adjust this for smoothness
-        myPlayer.x = myPlayer.x + (serverPlayers.x - myPlayer.x) * reconciliationRate;
-        myPlayer.y = myPlayer.y + (serverPlayers.y - myPlayer.y) * reconciliationRate;
-      }
-  });
+
+  }
+  //Merge data
+  const serverPlayer = data.players[myPlayerId];
+
+  if (serverPlayer) {
+    // Reconciliation: Smoothly adjust our predicted position towards the
+    // server's authoritative position.  This prevents large jumps.
+    const reconciliationRate = 0.1; // Adjust this for smoothness
+    myPlayer.x = myPlayer.x + (serverPlayer.x - myPlayer.x) * reconciliationRate;
+    myPlayer.y = myPlayer.y + (serverPlayer.y - myPlayer.y) * reconciliationRate;
+  }
+
+  //Update Players object
+  players[myPlayerId] = myPlayer;
+});
 
 
 // Get Mouse Position on canvas
@@ -82,18 +93,26 @@ canvas.addEventListener('mousemove', (event) => {
 
 // Game loop (drawing)
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
-    for (const playerId in players) {
-        const player = players[playerId];
-        ctx.beginPath();
-        ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
-        ctx.fillStyle = player.color;
-        ctx.fill();
-        ctx.closePath();
-    }
+  for (const playerId in players) {
+    const player = players[playerId];
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = player.color;
+    ctx.fill();
+    ctx.closePath();
+  }
 
-    requestAnimationFrame(draw); // Call draw() again on the next frame
+  // Draw food
+  for (const foodPellet of food) {
+    ctx.beginPath();
+    ctx.arc(foodPellet.x, foodPellet.y, foodPellet.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = foodPellet.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+  requestAnimationFrame(draw); // Call draw() again on the next frame
 }
 
 draw(); // Start the game loop
