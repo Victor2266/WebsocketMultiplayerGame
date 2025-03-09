@@ -8,8 +8,11 @@ canvas.height = 600;
 
 let players = {}; // Store player data received from the server
 
+let myPlayerId = null;
+
 socket.on('connect', () => {
     console.log('Connected to server');
+    myPlayerId = socket.id;  // Get the client's player ID
 });
 
 socket.on('init', (data) => {
@@ -22,51 +25,6 @@ socket.on('newPlayer', (player) => {
 
 socket.on('playerDisconnected', (playerId) => {
     delete players[playerId];
-});
-
-socket.on('gameStateUpdate', (data) => {
-  players = data;
-});
-
-
-// Get Mouse Position on canvas
-function getMousePos(evt) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: evt.clientX - rect.left,
-    y: evt.clientY - rect.top
-  };
-}
-//Send Input data to server
-canvas.addEventListener('mousemove', (event) => {
-  const mousePos = getMousePos(event);
-  socket.emit('playerInput', mousePos);
-});
-
-
-// Game loop (drawing)
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-    for (const playerId in players) {
-        const player = players[playerId];
-        ctx.beginPath();
-        ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
-        ctx.fillStyle = player.color;
-        ctx.fill();
-        ctx.closePath();
-    }
-
-    requestAnimationFrame(draw); // Call draw() again on the next frame
-}
-
-draw(); // Start the game loop
-
-let myPlayerId = null;
-
-socket.on('connect', () => {
-    console.log('Connected to server');
-    myPlayerId = socket.id;  // Get the client's player ID
 });
 
 socket.on('gameStateUpdate', (data) => {
@@ -105,3 +63,40 @@ socket.on('gameStateUpdate', (data) => {
         myPlayer.y = myPlayer.y + (serverPlayers.y - myPlayer.y) * reconciliationRate;
       }
   });
+
+
+// Get Mouse Position on canvas
+function getMousePos(evt) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
+//Send Input data to server
+canvas.addEventListener('mousemove', (event) => {
+  const mousePos = getMousePos(event);
+  socket.emit('playerInput', mousePos);
+});
+
+
+// Game loop (drawing)
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+    for (const playerId in players) {
+        const player = players[playerId];
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
+        ctx.fillStyle = player.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    requestAnimationFrame(draw); // Call draw() again on the next frame
+}
+
+draw(); // Start the game loop
+
+
+
