@@ -2,14 +2,26 @@
 const socket = io();
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const scoreDisplay = document.createElement('div'); // Create score display element
 
 canvas.width = 800;  // Set canvas dimensions
 canvas.height = 600;
 
+// Add and style the score display
+scoreDisplay.id = 'scoreDisplay';
+scoreDisplay.style.position = 'relative';
+scoreDisplay.style.textAlign = 'right';
+scoreDisplay.style.padding = '5px';
+scoreDisplay.style.fontFamily = 'Arial, sans-serif';
+scoreDisplay.style.fontWeight = 'bold';
+scoreDisplay.style.fontSize = '18px';
+scoreDisplay.innerHTML = 'Score: 0';
+
+// Insert the score display after the canvas
+canvas.parentNode.insertBefore(scoreDisplay, canvas.nextSibling);
+
 let players = {}; // Store player data received from the server
 let food = []; // Array to store food
-
-
 let myPlayerId = null;
 
 socket.on('connect', () => {
@@ -19,6 +31,7 @@ socket.on('connect', () => {
 
 socket.on('init', (data) => {
   players = data.players;
+  updateScoreDisplay(); // Update score when initialized
 });
 
 socket.on('newPlayer', (player) => {
@@ -34,7 +47,7 @@ socket.on('gameStateUpdate', (data) => {
   for (let id in data.players) {
     if (id !== myPlayerId) {
       players[id] = data.players[id];
-    } 
+    }
     else {
       players[id].radius = data.players[id].radius; // Update our player's radius with server value
     }
@@ -73,8 +86,19 @@ socket.on('gameStateUpdate', (data) => {
 
   //Update Players object
   players[myPlayerId] = myPlayer;
+  // Update score display after state update
+  updateScoreDisplay();
 });
 
+// Function to update the score display
+function updateScoreDisplay() {
+  const myPlayer = players[myPlayerId];
+  if (myPlayer) {
+    // Calculate score based on radius (common in agar.io style games)
+    const score = Math.floor(myPlayer.radius * 10); // Adjust multiplication factor as needed
+    scoreDisplay.innerHTML = `HighScore: ${score} | CurrentSize: ${myPlayer.radius.toFixed(1)}`;
+  }
+}
 
 // Get Mouse Position on canvas
 function getMousePos(evt) {
