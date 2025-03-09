@@ -3,7 +3,8 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
-const { Player } = require('./game'); // Import Player class
+const { Player, checkCollision } = require('./game'); // Import Player and checkCollision
+
 
 const app = express();
 const server = http.createServer(app);
