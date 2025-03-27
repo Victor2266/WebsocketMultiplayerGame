@@ -44,3 +44,117 @@ The following are the key objectives of the project:
 # Enhance Client-Side Performance:
 - Design a lightweight, responsive game UI for smooth user interactions.
 - Use efficient data handling to reduce unnecessary bandwidth consumption.
+
+## Description
+This is a real-time multiplayer game similar to Agar.io where players control circular avatars, collect food to grow larger, and compete with other players. The game features:
+
+- Real-time multiplayer gameplay
+- WebSocket communication via Socket.IO
+- Smooth client-side prediction and server reconciliation
+- Player growth mechanics and collision detection
+- Dynamic food spawning
+
+## Game Mechanics
+- Move your player by moving your mouse
+- Collect small food dots to grow larger
+- Larger players can absorb smaller ones
+- When absorbed, players respawn at a smaller size
+
+## Technology Stack
+- **Frontend**: HTML5 Canvas, JavaScript
+- **Backend**: Node.js, Express
+- **Real-time Communication**: Socket.IO
+- **Deployment**: Render
+
+## Local Development Setup
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm (v7 or higher)
+
+### Installation
+1. Clone the repository
+```bash
+git clone https://github.com/SRameel/WebsocketMultiplayerGame.git
+cd WebsocketMultiplayerGame
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start the development server
+```bash
+npm start
+```
+
+4. Open your browser and navigate to `http://localhost:3000`
+
+## Deployment on Render
+
+### Prerequisites
+- GitHub account
+- Render account (sign up at [render.com](https://render.com))
+
+### Deployment Steps
+
+1. **Prepare Your Repository**
+   - Ensure your code is pushed to your GitHub repository
+   - Verify that your `package.json` has the correct start script:
+   ```json
+   "scripts": {
+     "start": "node server/server.js"
+   }
+   ```
+
+2. **Sign Up and Sign In to Render**
+   - Create an account on [render.com](https://render.com) if you don't have one
+   - Sign in to your Render account
+
+3. **Create a New Web Service**
+   - Click the "New +" button in the dashboard
+   - Select "Web Service"
+
+4. **Connect Your Repository**
+   - Connect your GitHub account if not already connected
+   - Find and select your repository (WebsocketMultiplayerGame)
+
+5. **Configure the Web Service**
+   - Name: "agar-io-multiplayer" (or any name you prefer)
+   - Environment: Node
+   - Region: Choose the closest to your users
+   - Branch: main (or your primary branch)
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+   - Plan: Free tier
+
+6. **Deploy Your Application**
+   - Click "Create Web Service"
+   - Render will automatically build and deploy your application
+   - This process takes a few minutes
+
+7. **Access Your Deployed Game**
+   - Once deployment is complete, Render will provide a URL (e.g., `https://your-app-name.onrender.com`)
+   - Share this URL with friends to play together
+
+### Monitoring and Debugging on Render
+- View logs by selecting your service and clicking the "Logs" tab
+- Monitor performance in the "Metrics" tab
+- Set up alerts in the "Events" tab
+
+## Game Architecture
+
+### Server-Side Components
+- `server.js`: Main server setup, WebSocket handling, game loop
+- `game.js`: Game logic, player and food classes, collision detection
+
+### Client-Side Components
+- `index.html`: Game HTML structure
+- `app.js`: Client-side game logic, rendering, and input handling
+- `style.css`: Game styling
+
+## Acknowledgments
+- Inspired by the original [Agar.io](https://agar.io/) game
+- Built with [Socket.IO](https://socket.io/)
+- Deployed on [Render](https://render.com)
