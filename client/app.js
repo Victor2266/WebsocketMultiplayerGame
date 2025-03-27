@@ -9,16 +9,18 @@ canvas.height = 600;
 
 // Add and style the score display
 scoreDisplay.id = 'scoreDisplay';
-scoreDisplay.style.position = 'relative';
-scoreDisplay.style.textAlign = 'right';
-scoreDisplay.style.padding = '5px';
+scoreDisplay.style.position = 'absolute';
+scoreDisplay.style.right = '20px';
+scoreDisplay.style.top = '20px';
+scoreDisplay.style.padding = '10px 15px';
 scoreDisplay.style.fontFamily = 'Arial, sans-serif';
 scoreDisplay.style.fontWeight = 'bold';
 scoreDisplay.style.fontSize = '18px';
-scoreDisplay.innerHTML = 'Score: 0';
-
-// Insert the score display after the canvas
-canvas.parentNode.insertBefore(scoreDisplay, canvas.nextSibling);
+scoreDisplay.style.background = 'rgba(0, 0, 0, 0.6)';
+scoreDisplay.style.color = 'white';
+scoreDisplay.style.borderRadius = '10px';
+scoreDisplay.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.3)';
+document.body.appendChild(scoreDisplay);
 
 let players = {}; // Store player data received from the server
 let food = []; // Array to store food
@@ -71,9 +73,8 @@ socket.on('gameStateUpdate', (data) => {
       myPlayer.x += moveX;
       myPlayer.y += moveY;
     }
-
   }
-  //Merge data
+  // Merge data
   const serverPlayer = data.players[myPlayerId];
 
   if (serverPlayer) {
@@ -84,7 +85,7 @@ socket.on('gameStateUpdate', (data) => {
     myPlayer.y = myPlayer.y + (serverPlayer.y - myPlayer.y) * reconciliationRate;
   }
 
-  //Update Players object
+  // Update Players object
   players[myPlayerId] = myPlayer;
   // Update score display after state update
   updateScoreDisplay();
@@ -108,31 +109,40 @@ function getMousePos(evt) {
     y: evt.clientY - rect.top
   };
 }
-//Send Input data to server
+
+// Send Input data to server
 canvas.addEventListener('mousemove', (event) => {
   const mousePos = getMousePos(event);
   socket.emit('playerInput', mousePos);
 });
 
-
 // Game loop (drawing)
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+  // Apply a gradient background for a visually appealing look
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  gradient.addColorStop(0, '#282c34');
+  gradient.addColorStop(1, '#1e1e1e');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (const playerId in players) {
     const player = players[playerId];
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
     ctx.fillStyle = player.color;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(255,255,255,0.5)';
     ctx.fill();
     ctx.closePath();
   }
 
-  // Draw food
+  // Draw food with a subtle glow effect
   for (const foodPellet of food) {
     ctx.beginPath();
     ctx.arc(foodPellet.x, foodPellet.y, foodPellet.radius, 0, 2 * Math.PI);
     ctx.fillStyle = foodPellet.color;
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = 'rgba(255,255,255,0.2)';
     ctx.fill();
     ctx.closePath();
   }
@@ -140,6 +150,3 @@ function draw() {
 }
 
 draw(); // Start the game loop
-
-
-
