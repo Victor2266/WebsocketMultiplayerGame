@@ -2,7 +2,7 @@ services:
   - type: web
     name: websocket-multiplayer-game
     env: node
-    region: oregon
+    region: virginia
     buildCommand: npm install
     startCommand: npm start
     envVars:
