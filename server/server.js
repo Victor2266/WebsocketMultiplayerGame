@@ -1,21 +1,28 @@
-// server/server.js
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
-const { Player, Food, checkCollision } = require('./game'); // Import Player and checkCollision
-
+const cors = require('cors');
+const { Player, Food, checkCollision } = require('./game');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // Be more specific in production
+    methods: ["GET", "POST"]
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the 'client' directory
+// CORS Configuration
+app.use(cors());
+
+// Serve static files from the client directory
 app.use(express.static(path.join(__dirname, '../client')));
 
-
+// Rest of your existing server code remains the same...
 let players = {}; // Store player data
 let food = []; // Array to store food
 let foodIdCounter = 0; // Unique ID for each food pellet
@@ -41,7 +48,6 @@ io.on('connection', (socket) => {
 
     // Inform other players about the new player
     socket.broadcast.emit('newPlayer', player);
-
 
     socket.on('disconnect', () => {
         console.log('user disconnected:', socket.id);
@@ -97,7 +103,6 @@ setInterval(() => {
                         players[id2].x = Math.random() * 800;
                         players[id2].y = Math.random() * 600;
                         players[id2].radius = 20;
-
                     }
                 }
             }
@@ -118,6 +123,6 @@ setInterval(() => {
 
 }, 1000 / 60); // 60 updates per second (adjust as needed)
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server listening on port ${PORT}`);
 });
