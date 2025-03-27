@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: websocket-multiplayer-game
+    env: node
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 16.x
