@@ -1,13 +1,19 @@
-// client/app.js
-const socket = io();
+// Client-side socket connection with robust error handling
+const socket = io(window.location.origin, {
+  withCredentials: false,
+  transports: ['websocket', 'polling']
+});
+
+// Get canvas and context
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const scoreDisplay = document.createElement('div'); // Create score display element
 
-canvas.width = 800;  // Set canvas dimensions
+// Set canvas dimensions
+canvas.width = 800;
 canvas.height = 600;
 
-// Add and style the score display
+// Create score display element
+const scoreDisplay = document.createElement('div');
 scoreDisplay.id = 'scoreDisplay';
 scoreDisplay.style.position = 'absolute';
 scoreDisplay.style.right = '20px';
@@ -22,13 +28,19 @@ scoreDisplay.style.borderRadius = '10px';
 scoreDisplay.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.3)';
 document.body.appendChild(scoreDisplay);
 
+// Game state variables
 let players = {}; // Store player data received from the server
 let food = []; // Array to store food
 let myPlayerId = null;
 
+// Socket event handlers
 socket.on('connect', () => {
   console.log('Connected to server');
   myPlayerId = socket.id;  // Get the client's player ID
+});
+
+socket.on('connect_error', (error) => {
+  console.error('Socket Connection Error:', error);
 });
 
 socket.on('init', (data) => {
@@ -58,11 +70,9 @@ socket.on('gameStateUpdate', (data) => {
   // Update food
   food = data.food;
 
-  // Client-side prediction: Update *our* player's position locally *before*
-  // receiving the server update.  This makes movement feel smoother.
+  // Client-side prediction for smoother movement
   const myPlayer = players[myPlayerId];
   if (myPlayer) {
-    // Update our local copy of the player based on the *last known* input.
     const dx = myPlayer.target.x - myPlayer.x;
     const dy = myPlayer.target.y - myPlayer.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -74,29 +84,24 @@ socket.on('gameStateUpdate', (data) => {
       myPlayer.y += moveY;
     }
   }
-  // Merge data
-  const serverPlayer = data.players[myPlayerId];
 
+  // Server reconciliation to prevent large position jumps
+  const serverPlayer = data.players[myPlayerId];
   if (serverPlayer) {
-    // Reconciliation: Smoothly adjust our predicted position towards the
-    // server's authoritative position.  This prevents large jumps.
-    const reconciliationRate = 0.1; // Adjust this for smoothness
+    const reconciliationRate = 0.1; // Adjust for smoothness
     myPlayer.x = myPlayer.x + (serverPlayer.x - myPlayer.x) * reconciliationRate;
     myPlayer.y = myPlayer.y + (serverPlayer.y - myPlayer.y) * reconciliationRate;
   }
 
-  // Update Players object
-  players[myPlayerId] = myPlayer;
-  // Update score display after state update
+  // Update score display
   updateScoreDisplay();
 });
 
-// Function to update the score display
+// Update score display function
 function updateScoreDisplay() {
   const myPlayer = players[myPlayerId];
   if (myPlayer) {
-    // Calculate score based on radius (common in agar.io style games)
-    const score = Math.floor(myPlayer.radius * 10); // Adjust multiplication factor as needed
+    const score = Math.floor(myPlayer.radius * 10);
     scoreDisplay.innerHTML = `HighScore: ${score} | CurrentSize: ${myPlayer.radius.toFixed(1)}`;
   }
 }
@@ -116,15 +121,16 @@ canvas.addEventListener('mousemove', (event) => {
   socket.emit('playerInput', mousePos);
 });
 
-// Game loop (drawing)
+// Game rendering loop
 function draw() {
-  // Apply a gradient background for a visually appealing look
+  // Apply gradient background
   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
   gradient.addColorStop(0, '#282c34');
   gradient.addColorStop(1, '#1e1e1e');
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Render players
   for (const playerId in players) {
     const player = players[playerId];
     ctx.beginPath();
@@ -136,7 +142,7 @@ function draw() {
     ctx.closePath();
   }
 
-  // Draw food with a subtle glow effect
+  // Render food with glow effect
   for (const foodPellet of food) {
     ctx.beginPath();
     ctx.arc(foodPellet.x, foodPellet.y, foodPellet.radius, 0, 2 * Math.PI);
@@ -146,7 +152,10 @@ function draw() {
     ctx.fill();
     ctx.closePath();
   }
-  requestAnimationFrame(draw); // Call draw() again on the next frame
+
+  // Continue rendering loop
+  requestAnimationFrame(draw);
 }
 
-draw(); // Start the game loop
+// Start the game rendering
+draw();
