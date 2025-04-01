@@ -2,7 +2,7 @@
 Agar.io Type Multiplayer Game using JavaScript, node.js and websockets
 
 # Local Setup
-First use cd to navigate to the base directory
+First use cd to navigate the terminal to the base directory
 ```
 install node.js
 and type node server/server.js to run it and open brower to http://localhost:3000/
