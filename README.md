@@ -1,7 +1,7 @@
 # WebsocketMultiplayerGame
 Agar.io Type Multiplayer Game using JavaScript, node.js and websockets
 
-# Setup
+# Local Setup
 ```
 install node.js
 and type node server/server.js to run it and open brower to http://localhost:3000/
