@@ -8,6 +8,7 @@ Agar.io Type Multiplayer Game using JavaScript, node.js and websockets
 ### Prerequisites
 - Node.js (v16 or higher)
 - npm (v7 or higher)
+- Tested on windows OS
 
 1. First clone this repo
 ```bash
