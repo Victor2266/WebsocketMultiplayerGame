@@ -2,14 +2,32 @@
 Agar.io Type Multiplayer Game using JavaScript, node.js and websockets
 
 # Local Setup
-1. First use cd to navigate the terminal to the base directory
-2. Type the following commands to run the server
+### Prerequisites
+- Node.js (v16 or higher)
+- npm (v7 or higher)
+
+1. First clone this repo
+```bash
+git clone https://github.com/Victor2266/WebsocketMultiplayerGame.git
 ```
-install node.js
+2. navigate the terminal to the base directory
+```bash
+cd WebsocketMultiplayerGame
+```
+4. Install node.js
+```bash
+npm install
+```
+6. Type the following command to run the server
+```bash
 node server/server.js
+# or just
+npm start
 ```
-3. Open internet brower to http://localhost:3000/ to play play the game
+
+3. Open internet brower to http://localhost:3000/ to play the game
 4. Open Multiple windows to see multiplayer realtime connectivity
+
 
 # Visit The Deployed Site Here:
 https://websocketmultiplayergame.onrender.com/
@@ -72,31 +90,6 @@ This is a real-time multiplayer game similar to Agar.io where players control ci
 - **Backend**: Node.js, Express
 - **Real-time Communication**: Socket.IO
 - **Deployment**: Render
-
-## Local Development Setup
-
-### Prerequisites
-- Node.js (v16 or higher)
-- npm (v7 or higher)
-
-### Installation
-1. Clone the repository
-```bash
-git clone https://github.com/SRameel/WebsocketMultiplayerGame.git
-cd WebsocketMultiplayerGame
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Start the development server
-```bash
-npm start
-```
-
-4. Open your browser and navigate to `http://localhost:3000`
 
 ## Deployment on Render
 
