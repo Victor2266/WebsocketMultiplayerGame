@@ -14,7 +14,7 @@ git clone https://github.com/Victor2266/WebsocketMultiplayerGame.git
 ```bash
 cd WebsocketMultiplayerGame
 ```
-4. Install node.js
+4. Install the dependencies listed in the project's package.json file
 ```bash
 npm install
 ```
