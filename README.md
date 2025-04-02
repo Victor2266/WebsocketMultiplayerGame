@@ -18,15 +18,15 @@ cd WebsocketMultiplayerGame
 ```bash
 npm install
 ```
-6. Type the following command to run the server
+5. Type the following command to run the server
 ```bash
 node server/server.js
 # or just
 npm start
 ```
 
-3. Open internet brower to http://localhost:3000/ to play the game
-4. Open Multiple windows to see multiplayer realtime connectivity
+6. Open internet brower to http://localhost:3000/ to play the game
+7. Open Multiple windows to see multiplayer realtime connectivity
 
 
 # Visit The Deployed Site Here:
