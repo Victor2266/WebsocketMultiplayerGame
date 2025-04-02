@@ -22,7 +22,7 @@ app.use(cors());
 // Serve static files from the client directory
 app.use(express.static(path.join(__dirname, '../client')));
 
-// Rest of your existing server code remains the same...
+// Rest of server code:
 let players = {}; // Store player data
 let food = []; // Array to store food
 let foodIdCounter = 0; // Unique ID for each food pellet
