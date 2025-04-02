@@ -32,6 +32,58 @@ npm start
 # Visit The Deployed Site Here:
 https://websocketmultiplayergame.onrender.com/
 
+## Deployment on Render
+
+### Prerequisites
+- GitHub account
+- Render account (sign up at [render.com](https://render.com))
+
+### Deployment Steps
+
+1. **Prepare Your Repository**
+   - Ensure your code is pushed to your GitHub repository
+   - Verify that your `package.json` has the correct start script:
+   ```json
+   "scripts": {
+     "start": "node server/server.js"
+   }
+   ```
+
+2. **Sign Up and Sign In to Render**
+   - Create an account on [render.com](https://render.com) if you don't have one
+   - Sign in to your Render account
+
+3. **Create a New Web Service**
+   - Click the "New +" button in the dashboard
+   - Select "Web Service"
+
+4. **Connect Your Repository**
+   - Connect your GitHub account if not already connected
+   - Find and select your repository (WebsocketMultiplayerGame)
+
+5. **Configure the Web Service**
+   - Name: "agar-io-multiplayer" (or any name you prefer)
+   - Environment: Node
+   - Region: Choose the closest to your users
+   - Branch: main (or your primary branch)
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+   - Plan: Free tier
+
+6. **Deploy Your Application**
+   - Click "Create Web Service"
+   - Render will automatically build and deploy your application
+   - This process takes a few minutes
+
+7. **Access Your Deployed Game**
+   - Once deployment is complete, Render will provide a URL (e.g., `https://your-app-name.onrender.com`)
+   - Share this URL with friends to play together
+
+### Monitoring and Debugging on Render
+- View logs by selecting your service and clicking the "Logs" tab
+- Monitor performance in the "Metrics" tab
+- Set up alerts in the "Events" tab
+
 # Abstract:
 Agar.io Implementation: Development of a real-time multi-player gaming system that is highly scalable and optimized in a distributed architecture. In this development process, the key challenges that come into focus are those of real-time synchronization, network latency handling, load balancing, and fault tolerance. Agar.io is a game that demands smooth and continuous updates of player movements, collision detection, and leaderboard updating.
 
@@ -90,58 +142,6 @@ This is a real-time multiplayer game similar to Agar.io where players control ci
 - **Backend**: Node.js, Express
 - **Real-time Communication**: Socket.IO
 - **Deployment**: Render
-
-## Deployment on Render
-
-### Prerequisites
-- GitHub account
-- Render account (sign up at [render.com](https://render.com))
-
-### Deployment Steps
-
-1. **Prepare Your Repository**
-   - Ensure your code is pushed to your GitHub repository
-   - Verify that your `package.json` has the correct start script:
-   ```json
-   "scripts": {
-     "start": "node server/server.js"
-   }
-   ```
-
-2. **Sign Up and Sign In to Render**
-   - Create an account on [render.com](https://render.com) if you don't have one
-   - Sign in to your Render account
-
-3. **Create a New Web Service**
-   - Click the "New +" button in the dashboard
-   - Select "Web Service"
-
-4. **Connect Your Repository**
-   - Connect your GitHub account if not already connected
-   - Find and select your repository (WebsocketMultiplayerGame)
-
-5. **Configure the Web Service**
-   - Name: "agar-io-multiplayer" (or any name you prefer)
-   - Environment: Node
-   - Region: Choose the closest to your users
-   - Branch: main (or your primary branch)
-   - Build Command: `npm install`
-   - Start Command: `npm start`
-   - Plan: Free tier
-
-6. **Deploy Your Application**
-   - Click "Create Web Service"
-   - Render will automatically build and deploy your application
-   - This process takes a few minutes
-
-7. **Access Your Deployed Game**
-   - Once deployment is complete, Render will provide a URL (e.g., `https://your-app-name.onrender.com`)
-   - Share this URL with friends to play together
-
-### Monitoring and Debugging on Render
-- View logs by selecting your service and clicking the "Logs" tab
-- Monitor performance in the "Metrics" tab
-- Set up alerts in the "Events" tab
 
 ## Game Architecture
 
